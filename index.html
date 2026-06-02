@@ -5,109 +5,84 @@
   <meta charset="utf-8">
   <title>We Are Ghosts AR</title>
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-
 </head>
 
 <body style="margin: 0; overflow: hidden;">
 
+  <button
+    id="startButton"
+    style="
+      position: fixed;
+      z-index: 9999;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 14px 22px;
+      font-size: 16px;
+    ">
+    Start AR
+  </button>
+
   <a-scene
     embedded
-    arjs="
-      trackingMethod: best;
-      sourceType: webcam;
-      debugUIEnabled: false;
-    "
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
   >
 
     <a-assets>
-
-      <!-- VIDEO -->
-
       <video
         id="montageVideo"
         src="assets/videos/Montage.mp4"
         preload="auto"
         loop
         muted
-        autoplay
         playsinline
-        webkit-playsinline
-        crossorigin="anonymous">
+        webkit-playsinline>
       </video>
 
-      <!-- WATER TEXTURES -->
-
-      <img
-        id="waterOne"
-        src="assets/images/water-1.jpg"
-      >
-
-      <img
-        id="waterTwo"
-        src="assets/images/water-2.jpg"
-      >
-
+      <img id="waterOne" src="assets/images/water-1.jpg">
+      <img id="waterTwo" src="assets/images/water-2.jpg">
     </a-assets>
 
     <a-marker preset="hiro">
 
-      <!-- WATER LAYER 1 -->
-
+      <!-- bottom water layer -->
       <a-plane
         src="#waterTwo"
         position="0 0.02 0"
         rotation="-90 0 0"
-        width="1.5"
-        height="1.5"
-        material="
-          transparent: true;
-          opacity: 0.55;
-        ">
+        width="1.2"
+        height="1.2"
+        material="shader: flat; transparent: true; opacity: 0.55;">
       </a-plane>
 
-      <!-- WATER LAYER 2 -->
-
+      <!-- top water layer -->
       <a-plane
         src="#waterOne"
         position="0 0.04 0"
         rotation="-90 0 0"
-        width="1.5"
-        height="1.5"
-        material="
-          transparent: true;
-          opacity: 0.35;
-        ">
+        width="1.2"
+        height="1.2"
+        material="shader: flat; transparent: true; opacity: 0.35;">
       </a-plane>
 
-      <!-- VIDEO -->
-
-      <a-video
-        src="#montageVideo"
+      <!-- video as material on plane, more reliable than a-video -->
+      <a-plane
+        material="src: #montageVideo; shader: flat;"
         position="0 0.35 0"
         rotation="-90 0 0"
         width="0.85"
-        height="0.48"
-        material="shader: flat;">
-      </a-video>
+        height="0.48">
+      </a-plane>
 
-      <!-- GLOW SPHERE -->
-
+      <!-- small glow sphere -->
       <a-sphere
         position="0 0.8 0"
         radius="0.08"
-        material="
-          color: white;
-          emissive: white;
-          emissiveIntensity: 2;
-        ">
+        material="color: white; emissive: white; emissiveIntensity: 2;">
       </a-sphere>
 
     </a-marker>
@@ -117,34 +92,24 @@
   </a-scene>
 
   <script>
-
+    const button = document.querySelector("#startButton");
     const video = document.querySelector("#montageVideo");
 
-    async function startExperience() {
-
+    button.addEventListener("click", async function () {
       try {
-
         video.muted = true;
         video.playsInline = true;
+        video.currentTime = 0;
 
         await video.play();
 
-        console.log("Video playing");
-
-      } catch(err) {
-
-        console.log("Playback failed:", err);
-
+        button.style.display = "none";
+        console.log("Video started");
+      } catch (error) {
+        console.log("Video failed:", error);
+        button.innerText = "Tap Again";
       }
-
-      document.removeEventListener("click", startExperience);
-      document.removeEventListener("touchstart", startExperience);
-
-    }
-
-    document.addEventListener("click", startExperience);
-    document.addEventListener("touchstart", startExperience);
-
+    });
   </script>
 
 </body>
