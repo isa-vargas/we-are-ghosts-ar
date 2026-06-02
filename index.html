@@ -9,6 +9,26 @@
 
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+  <script>
+    AFRAME.registerComponent("scroll-water-one", {
+      tick: function (time) {
+        const mesh = this.el.getObject3D("mesh");
+        if (mesh && mesh.material && mesh.material.map) {
+          mesh.material.map.offset.y = time * 0.00005;
+        }
+      }
+    });
+
+    AFRAME.registerComponent("scroll-water-two", {
+      tick: function (time) {
+        const mesh = this.el.getObject3D("mesh");
+        if (mesh && mesh.material && mesh.material.map) {
+          mesh.material.map.offset.y = -time * 0.00004;
+        }
+      }
+    });
+  </script>
 </head>
 
 <body style="margin: 0; overflow: hidden;">
@@ -49,38 +69,40 @@
 
     <a-marker preset="hiro">
 
-      <!-- bottom water layer -->
+      <!-- ocean floor layer 1 -->
       <a-plane
         src="#waterTwo"
-        position="0 0.02 0"
+        position="0 0 0"
         rotation="-90 0 0"
-        width="1.2"
-        height="1.2"
-        material="shader: flat; transparent: true; opacity: 0.55;">
+        width="2.5"
+        height="2.5"
+        material="shader: flat; transparent: true; opacity: 0.55;"
+        scroll-water-two>
       </a-plane>
 
-      <!-- top water layer -->
+      <!-- ocean floor layer 2 -->
       <a-plane
         src="#waterOne"
-        position="0 0.04 0"
+        position="0 0.02 0"
         rotation="-90 0 0"
-        width="1.2"
-        height="1.2"
-        material="shader: flat; transparent: true; opacity: 0.35;">
+        width="2.5"
+        height="2.5"
+        material="shader: flat; transparent: true; opacity: 0.35;"
+        scroll-water-one>
       </a-plane>
 
-      <!-- video as material on plane, more reliable than a-video -->
+      <!-- video plane standing above ocean -->
       <a-plane
         material="src: #montageVideo; shader: flat;"
-        position="0 0.35 0"
-        rotation="-90 0 0"
+        position="0 0.55 0"
+        rotation="0 0 0"
         width="0.85"
         height="0.48">
       </a-plane>
 
-      <!-- small glow sphere -->
+      <!-- small glow sphere / moon -->
       <a-sphere
-        position="0 0.8 0"
+        position="0 0.95 0"
         radius="0.08"
         material="color: white; emissive: white; emissiveIntensity: 2;">
       </a-sphere>
