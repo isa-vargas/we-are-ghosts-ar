@@ -29,6 +29,7 @@
       }
     });
   </script>
+
 </head>
 
 <body style="margin: 0; overflow: hidden;">
@@ -49,10 +50,17 @@
 
   <a-scene
     embedded
-    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+    arjs="
+      trackingMethod: best;
+      sourceType: webcam;
+      debugUIEnabled: false;
+    "
   >
 
     <a-assets>
+
+      <!-- VIDEO -->
+
       <video
         id="montageVideo"
         src="assets/videos/Montage.mp4"
@@ -63,49 +71,63 @@
         webkit-playsinline>
       </video>
 
-      <img id="waterOne" src="assets/images/water-1.jpg">
-      <img id="waterTwo" src="assets/images/water-2.jpg">
+      <!-- WATER TEXTURES -->
+
+      <img
+        id="waterOne"
+        src="assets/images/water-1.jpg"
+      >
+
+      <img
+        id="waterTwo"
+        src="assets/images/water-2.jpg"
+      >
+
     </a-assets>
 
     <a-marker preset="hiro">
 
-      <!-- ocean floor layer 1 -->
+      <!-- WATER LAYER 1 -->
+
       <a-plane
         src="#waterTwo"
-        position="0 0 0"
-        rotation="-90 0 0"
+        position="0 0.01 -0.25"
+        rotation="90 0 0"
         width="2.5"
         height="2.5"
-        material="shader: flat; transparent: true; opacity: 0.55;"
+        material="
+          shader: flat;
+          transparent: true;
+          opacity: 0.55;
+        "
         scroll-water-two>
       </a-plane>
 
-      <!-- ocean floor layer 2 -->
+      <!-- WATER LAYER 2 -->
+
       <a-plane
         src="#waterOne"
-        position="0 0.02 0"
-        rotation="-90 0 0"
+        position="0 0.03 -0.25"
+        rotation="90 0 0"
         width="2.5"
         height="2.5"
-        material="shader: flat; transparent: true; opacity: 0.35;"
+        material="
+          shader: flat;
+          transparent: true;
+          opacity: 0.35;
+        "
         scroll-water-one>
       </a-plane>
 
-      <!-- video plane standing above ocean -->
+      <!-- VIDEO -->
+
       <a-plane
         material="src: #montageVideo; shader: flat;"
-        position="0 0.55 0"
-        rotation="0 0 0"
+        position="0 0.35 0"
+        rotation="-90 0 0"
         width="0.85"
         height="0.48">
       </a-plane>
-
-      <!-- small glow sphere / moon -->
-      <a-sphere
-        position="0 0.95 0"
-        radius="0.08"
-        material="color: white; emissive: white; emissiveIntensity: 2;">
-      </a-sphere>
 
     </a-marker>
 
@@ -114,11 +136,14 @@
   </a-scene>
 
   <script>
+
     const button = document.querySelector("#startButton");
     const video = document.querySelector("#montageVideo");
 
     button.addEventListener("click", async function () {
+
       try {
+
         video.muted = true;
         video.playsInline = true;
         video.currentTime = 0;
@@ -126,12 +151,19 @@
         await video.play();
 
         button.style.display = "none";
+
         console.log("Video started");
+
       } catch (error) {
+
         console.log("Video failed:", error);
+
         button.innerText = "Tap Again";
+
       }
+
     });
+
   </script>
 
 </body>
