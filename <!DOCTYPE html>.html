@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>We Are Ghosts AR</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+  <script>
+    AFRAME.registerComponent("scroll-water-one", {
+      tick: function (time) {
+        const mesh = this.el.getObject3D("mesh");
+        if (mesh && mesh.material && mesh.material.map) {
+          mesh.material.map.offset.y = time * 0.00008;
+        }
+      }
+    });
+
+    AFRAME.registerComponent("scroll-water-two", {
+      tick: function (time) {
+        const mesh = this.el.getObject3D("mesh");
+        if (mesh && mesh.material && mesh.material.map) {
+          mesh.material.map.offset.y = -time * 0.00006;
+        }
+      }
+    });
+  </script>
+</head>
+
+<body style="margin: 0; overflow: hidden;">
+
+  <a-scene embedded arjs>
+
+    <a-assets>
+      <video
+        id="montageVideo"
+        src="assets/videos/montage.mp4"
+        preload="auto"
+        loop
+        muted
+        playsinline
+        webkit-playsinline>
+      </video>
+
+      <img id="waterOne" src="assets/images/water 0344.jpg">
+      <img id="waterTwo" src="assets/images/Water 0397.jpg">
+    </a-assets>
+
+    <a-marker preset="hiro">
+
+      <!-- bottom water layer -->
+<a-plane
+  src="#waterTwo"
+  position="0 0.05 -0.35"
+  rotation="-90 0 0"
+  width="3.5"
+  height="3.5"
+  material="transparent: true; opacity: 0.65;"
+  scroll-water-two>
+</a-plane>
+
+<!-- top water layer -->
+<a-plane
+  src="#waterOne"
+  position="0 0.07 -0.35"
+  rotation="-90 0 0"
+  width="3.5"
+  height="3.5"
+  material="transparent: true; opacity: 0.45;"
+  scroll-water-one>
+</a-plane>
+
+      <!-- video -->
+      <a-video
+        src="#montageVideo"
+        position="0 0.8 0"
+        rotation="-90 0 0"
+        width="1.5"
+        height="0.85">
+      </a-video>
+
+      <!-- moon/glow sphere -->
+      <a-sphere
+        position="0 1.6 0"
+        radius="0.15"
+        material="color: white; emissive: white; emissiveIntensity: 2;">
+      </a-sphere>
+
+    </a-marker>
+
+    <a-entity camera></a-entity>
+
+  </a-scene>
+
+  <script>
+    const video = document.querySelector("#montageVideo");
+
+    function startExperience() {
+      if (video) video.play();
+
+      document.removeEventListener("click", startExperience);
+      document.removeEventListener("touchstart", startExperience);
+    }
+
+    document.addEventListener("click", startExperience);
+    document.addEventListener("touchstart", startExperience);
+  </script>
+
+</body>
+</html>
